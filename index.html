@@ -75,7 +75,7 @@
                 var respond2 = await window.contract.methods.urun_stok(i).call({from: selected_wallet_address});
                 //console.log(respond);
                 //console.log(respond2);
-                UrunAdi += '<input type="button" value="'+(i)+'\n'+ respond +'\n'+'Stok:'+' '+ respond2 + '" onclick="Satin_Al('+i+');">';
+                UrunAdi += '<input type="button" class="btn btn-dark" value="'+(i)+'\n'+ respond +'\n'+'Stok:'+' '+ respond2 + '" onclick="Satin_Al('+i+');">';
             }
               document.getElementById("aday_listesi").innerHTML = UrunAdi ; 
         }
