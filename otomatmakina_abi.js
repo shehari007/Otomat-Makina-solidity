@@ -14,7 +14,7 @@ var otomatmakina = [
 		],
 		"name": "satinAl",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
