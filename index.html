@@ -13,7 +13,7 @@ div<!DOCTYPE html>
 
     <script>
         
-        var ContractAddress = "0x174c8e7d96E0FA35552C8BD882d4310102Cbb2B8";
+        var ContractAddress = "0x75BdEDC0B61832fAf559E64Bc6725E31d36aB178";
         var top_Urun_sayisi;
         var selected_wallet_address;
 
@@ -93,8 +93,6 @@ div<!DOCTYPE html>
             var kacTane = document.getElementById("kac_tane").value;
             var hex= '0x'+parseInt('1000000000000000',10).toString(16);
             console.log(hex);
-            //eger biz sadece kacTane ile direk from address gonderirse %100 calisiyor boyle islem reddeityor
-            //await contract.methods.satinAl(sayi,kacTane).send({from: selected_wallet_address});
             await contract.methods.satinAl(sayi,kacTane).send({from: selected_wallet_address, value: hex*kacTane, gas: 2100000, gasPrice: 8000000000});
             await urun_Mapping();
             
