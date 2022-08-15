@@ -73,8 +73,8 @@ div<!DOCTYPE html>
             for( i = 0; i <top_Urun_sayisi;i++){
                 var respond = await window.contract.methods.urun_isim(i).call({from: selected_wallet_address});
                 var respond2 = await window.contract.methods.urun_stok(i).call({from: selected_wallet_address});
-                console.log(respond);
-                console.log(respond2);
+                //console.log(respond);
+                //console.log(respond2);
                 UrunAdi += '<input type="button" value="'+(i)+'\n'+ respond +'\n'+'Stok:'+' '+ respond2 + '" onclick="Satin_Al('+i+');">';
             }
               document.getElementById("aday_listesi").innerHTML = UrunAdi ; 
@@ -88,14 +88,25 @@ div<!DOCTYPE html>
             
         }}
 
-        async function Satin_Al(sayi){
+        async function Satin_Al(id){
              
             var kacTane = document.getElementById("kac_tane").value;
             var hex= '0x'+parseInt('1000000000000000',10).toString(16);
             console.log(hex);
-            await contract.methods.satinAl(sayi,kacTane).send({from: selected_wallet_address, value: hex*kacTane, gas: 2100000, gasPrice: 8000000000});
+            var respond = await contract.methods.satinAl(id,kacTane).send({
+                from: selected_wallet_address, 
+                value: hex*kacTane, 
+                gas: 210000, 
+                gasPrice: 8000000000});
+              
+                //console.log(respond);
             await urun_Mapping();
-            
+            if(respond["blockHash"]){
+                alert("Satis Tamamlandi");
+            } else {
+                alert("Hata oluştu");
+            }
+           
              
         }
         async function Stok_Ekle(){
