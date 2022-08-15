@@ -32,12 +32,16 @@
 
         async function getCurrentAccount(accountindex=0){
 
-           var accounts = await ethereum.request({method: "eth_requestAccounts"});
+           var accounts = await ethereum.request({method: "eth_requestAccounts"}).then(
+            alert("Metamask baglandi, Urun listesi yukleniyor lutfen bekleyeniz")
+           )
            console.log(accounts);
            document.getElementById("adres").value = accounts;
            selected_wallet_address = await accounts[accountindex];
            await top_Urun_sayisi1();
-           await urun_Mapping();
+           await urun_Mapping().then(
+            alert("Urun Listesi Geitrmis")
+           )
         }
 
         async function load() {
@@ -56,7 +60,7 @@
             } else {
                 alert("Hata oluştu");
             }
-            console.log(respond);
+            //console.log(respond);
             await top_Urun_sayisi1();
             await urun_Mapping();
             
@@ -75,7 +79,7 @@
                 var respond2 = await window.contract.methods.urun_stok(i).call({from: selected_wallet_address});
                 //console.log(respond);
                 //console.log(respond2);
-                UrunAdi += '<input type="button" class="btn btn-dark" value="'+(i)+'\n'+ respond +'\n'+'Stok:'+' '+ respond2 + '" onclick="Satin_Al('+i+');">';
+                 UrunAdi += '<input type="button" class="btn btn-dark" value="'+(i)+'\n'+ respond +'\n'+'Stok:'+' '+ respond2 + '" onclick="Satin_Al('+i+');">';
             }
               document.getElementById("aday_listesi").innerHTML = UrunAdi ; 
         }
@@ -84,18 +88,38 @@
             
             for( i = 0; i <top_Urun_sayisi;i++){
             var respond2 = await window.contract.methods.urun_stok(i).call({from: selected_wallet_address});
-            console.log(respond2);
+            //console.log(respond2);
             
         }}
 
+        async function stok_kontrol(id){
+            var respond2 = await window.contract.methods.urun_stok(id).call({from: selected_wallet_address});
+            console.log(respond2);
+            return respond2;
+        }
+
+
+         
+
         async function Satin_Al(id){
-             
-            var kacTane = document.getElementById("kac_tane").value;
-            var hex= '0x'+parseInt('1000000000000000',10).toString(16);
-            console.log(hex);
+            var stok_kontrol_sayisi = await stok_kontrol(id);
+            var kacTane = await document.getElementById("kac_tane").value;
+            console.log(stok_kontrol_sayisi);
+            console.log(kacTane);
+            
+            if(parseInt(stok_kontrol_sayisi)<=parseInt(kacTane)){
+                alert("Alacak Sayi stok tan buyuk girdiniz");
+            }           
+            else if(kacTane === '0')
+            {
+                alert("0 alacak sayi girdiniz, lutfen tekrar dene!");
+            } else {
+            //var hex= '0x'+parseInt('1000000000000000',10).toString(16);
+            var tutar = kacTane * 0.001;
+            //console.log(hex);
             var respond = await contract.methods.satinAl(id,kacTane).send({
                 from: selected_wallet_address, 
-                value: hex*kacTane, 
+                value: Web3.utils.toWei(tutar.toString(), "ether"),
                 gas: 210000, 
                 gasPrice: 8000000000});
               
@@ -107,7 +131,7 @@
                 alert("Hata oluştu");
             }
            
-             
+        }
         }
         async function Stok_Ekle(){
             var ID = document.getElementById("urun_id").value;
